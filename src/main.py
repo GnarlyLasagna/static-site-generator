@@ -1,29 +1,17 @@
-from textnode import TextNode
-from leafnode import LeafNode
+import os
+import shutil
 
+from copystatic import copy_files_recursive
+from generator import  generate_pages_recursive
 def main():
-    node = TextNode("This is text with a `code block` word", "text")
-    print(node)
+    from_path = 'content'
+    template_path = 'template.html'
+    dest_path = 'public'
 
-def text_node_to_html_node(text_node):
-    if not isinstance(text_node, TextNode):
-        raise ValueError("Cannot convert a value that is not a Text Node to HTML Node")
+    os.makedirs(dest_path,exist_ok = True)
+    generate_pages_recursive(from_path, template_path, dest_path)
 
-    if text_node.text_type == text_type_text:
-        return LeafNode(None, text_node.text)
-    elif text_node.text_type == text_type_bold:
-        return LeafNode("b", text_node.text)
-    elif text_node.text_type == text_type_italic:
-        return LeafNode("i", text_node.text)
-    elif text_node.text_type == text_type_code:
-        return LeafNode("code", text_node.text)
-    elif text_node.text_type == text_type_link:
-        return LeafNode("a", text_node.text, {"href": text_node.url})
-    elif text_node.text_type == text_type_image:
-        return LeafNode(None, "", {
-            "src": text_node.url,
-            "alt": text_node.text
-        })
-    raise ValueError("Text Node not a valid type to convert into HTML Node")
+    print("Page generation completed. You can now start your web server.")
 
-main()
+if __name__ == "__main__":
+    main()
